@@ -57,8 +57,8 @@ display1_argument = (f"id:{screen_id[display1]} resolution:{resolution[display1]
 display2_argument = (f"id:{screen_id[display2]} resolution:{resolution[display2]} origin:{origin[display1]}")
 
 # Print the display info including the current and new origins for the two displays that will swap position. 
-print(f"id:{screen_id[display1]} resolution:{resolution[display1]} \t current origin:{origin[display1]} \t new origin:{origin[display2]}")
-print(f"id:{screen_id[display2]} resolution:{resolution[display2]} \t current origin:{origin[display2]} \t new origin:{origin[display1]}")
+print(f"id:{screen_id[display1]} res:{resolution[display1]} \t origin:{origin[display1]} \t> {origin[display2]}")
+print(f"id:{screen_id[display2]} res:{resolution[display2]} \t origin:{origin[display2]} \t> {origin[display1]}")
 
 # Print the displayplacer command that will run so it can be copied if desired.
 # This appends double quotes which are not used when calling via subprocess.run.

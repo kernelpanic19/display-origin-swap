@@ -1,6 +1,6 @@
 # Display Origin Swap (dos)
 ## Introduction
-Display Origin Swap provides a workaround to the issue where Macs will randomly reverse the screen arrangement of identical external displays. Uses the Displayplacer command line utility to swap the position of two displays.
+Display Origin Swap (dos) provides a workaround to the issue where Macs will randomly reverse the screen arrangement of identical external displays. dos uses the Displayplacer command line utility to swap the position of two displays.
 
 * Runs 'displayplacer list' to extract current screen configuration.  
 * Runs 'displayplacer' with the correct arguments to swap the origin position of two displays.

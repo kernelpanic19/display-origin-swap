@@ -52,6 +52,12 @@ def get_display_list():
             current_display_data = {}
     return(display_data)
 
+def validate_inputs(displays_to_swap, display_data):
+    # Check if the display indexes in displays_to_swap are within the range of available displays.
+    if any(d >= len(display_data) for d in displays_to_swap):
+        print("Error: One or more display indexes in displays_to_swap do not reference a detected screen.")
+        sys.exit(1)
+
 def print_display_info(displays_to_swap, display_data):
     print("\nSwapping display origin of screens:")
     for i, d in enumerate(displays_to_swap):
@@ -74,11 +80,7 @@ def main():
     displays_to_swap = (1, 2)
     display_data = get_display_list()
 
-    # Check if the display indexes in displays_to_swap are within the range of available displays.
-    if any(d >= len(display_data) for d in displays_to_swap):
-        print("Error: One or more display indexes in displays_to_swap do not reference a detected screen.")
-        sys.exit(1)
-
+    validate_inputs(displays_to_swap, display_data)
     print_display_info(displays_to_swap, display_data)
     swap_displays(displays_to_swap, display_data)
 

@@ -19,15 +19,16 @@ def main():
 ```
 
 ### Install Displayplacer
-Displayplacer is a macOS command line utility to configure multi-display resolutions and arrangements. 
-https://github.com/jakehilborn/displayplacer  
+Displayplacer is a macOS command line utility to configure multi-display resolutions and arrangements.
+
+https://github.com/jakehilborn/displayplacer
  
 Install via Homebrew with:
 ```
 brew tap jakehilborn/jakehilborn && brew install displayplacer
 ```
 ### Alias
-You may want to alias this script for ease of execution. Typing 'dos' in the shell will execute this script.
+You may want to alias this script for ease of execution. Typing `dos` in the shell will execute this script.
 The example below will need to be modified for your environment and appended to your .bash_profile or .zshrc.
 ```
 alias dos='python ~/code/dos/dos.py'

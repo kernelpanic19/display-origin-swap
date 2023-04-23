@@ -12,54 +12,75 @@ brew tap jakehilborn/jakehilborn && brew install displayplacer
 
 You may want to alias this for ease of execution. Typing 'dos' in the shell will execute this script.
 The example below will need to be modified for your environment and appended to your .bash_profile or .zshrc.
-alias dos='/Users/kernelpanic/.pyenv/versions/3.9.1/bin/python /Users/kernelpanic/vscode/dos/dos.py'    
+alias dos='python ~/Code/dos/dos.py'    
 """
 
 import subprocess
+import sys
 
-# Create lists to store extracted displayplacer data
-screen_id = []
-resolution = []
-origin = []
+def get_display_list():
 
-# Create vars to define the displays to swap.
-# The values should reflect the order they appear in the 'displayplacer' list command.
-# First appearance is 0, second is 1, etc.
-# If you have two external displays with the built-in display as the main display, the defaults should work.
-display1 = 1
-display2 = 2
+    # Create a list to store extracted displayplacer data as dictionaries
+    display_data = []
 
-# Run the "displayplacer list" command and split it into lines
-output = subprocess.run(["displayplacer", "list"], capture_output=True).stdout.decode()
-lines = output.strip().split("\n")
+    # Run the "displayplacer list" command and split it into lines
+    output = subprocess.run(["displayplacer", "list"], capture_output=True).stdout.decode()
+    lines = output.strip().split("\n")
 
-# Find lines that contain either the id, resolution or origin, and split at the colon.
-# Append the data to the lists created earlier.
-for line in lines:
-    if "Persistent screen id:" in line:
-        screen_id.append(line.split(":")[1].strip())
+    # Temporary dictionary to store data for each display
+    current_display_data = {}
 
-    if "Resolution:" in line:
-        resolution.append(line.split(":")[1].strip())
+    print("Detected screens:")
+    # Find lines that contain either the id, resolution or origin, and split at the colon.
+    # Append the data to the dictionaries and add them to the display_data list.
 
-    if "Origin:" in line:
-        origin.append(line.split(":")[1].strip())
+    for line in lines:
+        if "Persistent screen id:" in line:
+            current_display_data["screen_id"] = line.split(":")[1].strip()
+        
+        if "Type:" in line:
+            current_display_data["type"] = line.split(":")[1].strip()
 
-# Build the displayplacer command arguments for each display.  The origin is swapped for each display.
-display1_argument = (f"id:{screen_id[display1]} resolution:{resolution[display1]} origin:{origin[display2]}")
-display2_argument = (f"id:{screen_id[display2]} resolution:{resolution[display2]} origin:{origin[display1]}")
+        if "Resolution:" in line:
+            current_display_data["resolution"] = line.split(":")[1].strip()
 
-# Print the display info including the current and new origins for the two displays that will swap position. 
-print(f"id:{screen_id[1]} resolution:{resolution[display1]} \t current origin:{origin[display1]} \t new origin:{origin[display2]}")
-print(f"id:{screen_id[2]} resolution:{resolution[display2]} \t current origin:{origin[display2]} \t new origin:{origin[display1]}")
+        if "Origin:" in line:
+            current_display_data["origin"] = line.split(":")[1].strip()
+            display_data.append(current_display_data)
+            screen_index = display_data.index(current_display_data)
+            print(f"screen {screen_index}: {current_display_data}")
+            current_display_data = {}
+    return(display_data)
 
-# Print the displayplacer command that will run so it can be copied if desired.
-# This appends double quotes which are not used when calling via subprocess.run.
-print(f"\ndisplayplacer \"{display1_argument}\" \"{display2_argument}\"")
+def print_display_info(displays_to_swap, display_data):
+    print("\nSwapping display origin of screens:")
+    for i, d in enumerate(displays_to_swap):
+        print(f"screen {d}: type:{display_data[d]['type']} resolution:{display_data[d]['resolution']} \t current origin:{display_data[d]['origin']} \t new origin:{display_data[displays_to_swap[1 - i]]['origin']}")
 
-# Run the "displayplacer" command with arguments that swap the origin of the two displays.
-# Check the return status code and create an exception if not 0.
-output = subprocess.run(["displayplacer", display1_argument, display2_argument], check=True, capture_output=True).stdout.decode()
+def swap_displays(displays_to_swap, display_data):
+    displayplacer_arguments = [
+        f"id:{display_data[d]['screen_id']} resolution:{display_data[d]['resolution']} origin:{display_data[displays_to_swap[1 - i]]['origin']}"
+        for i, d in enumerate(displays_to_swap)
+    ]
 
-# Print subprocess output (none expected)
-print(output)
+    print("\nExecuting:")
+    print(f"displayplacer \"{displayplacer_arguments[0]}\" \"{displayplacer_arguments[1]}\"")
+
+    output = subprocess.run(["displayplacer", displayplacer_arguments[0], displayplacer_arguments[1]], check=True, capture_output=True).stdout.decode()
+
+    print(output)
+
+def main():
+    displays_to_swap = (1, 2)
+    display_data = get_display_list()
+
+    # Check if the display indexes in displays_to_swap are within the range of available displays.
+    if any(d >= len(display_data) for d in displays_to_swap):
+        print("Error: One or more display indexes in displays_to_swap do not reference a detected screen.")
+        sys.exit(1)
+
+    print_display_info(displays_to_swap, display_data)
+    swap_displays(displays_to_swap, display_data)
+
+if __name__ == "__main__":
+    main()

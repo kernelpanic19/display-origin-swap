@@ -1,24 +1,27 @@
 # Display Origin Swap (dos)
-## Swaps the position of two displays using the displayplacer command line utility.
-Provides a workaround to the issue where Macs will randomly reverse the screen arrangement of identical external displays.  
-Runs 'displayplacer list' to extract current screen configuration.  
-Runs 'displayplacer' with the correct arguments to swap the origin position of two displays.
+## Introduction
+Display Origin Swap provides a workaround to the issue where Macs will randomly reverse the screen arrangement of identical external displays. Uses the Displayplacer command line utility to swap the position of two displays.
+
+* Runs 'displayplacer list' to extract current screen configuration.  
+* Runs 'displayplacer' with the correct arguments to swap the origin position of two displays.
 
 ### Install Display Origin Swap
+
 ```
-git clone https://github.com/kernelpanic19/dos.git
+git clone https://github.com/kernelpanic19/display-origin-swap.git
 ```
 
-Edit the displays_to_swap tuple in dos.py if needed.  This collection should contain the indexes of the two displays to swap. The indexes can be seen in the 'Detected screens' output of dos.py.
+### Configure Display Origin Swap
+Edit the displays_to_swap() tuple in dos.py if needed.  This collection should contain the indexes of the two displays to swap. The indexes can be seen in the 'Detected screens' output of dos.py.
 ```
 def main():
     displays_to_swap = (1, 2)
 ```
 
 ### Install Displayplacer
+Displayplacer is a macOS command line utility to configure multi-display resolutions and arrangements. 
 https://github.com/jakehilborn/displayplacer  
-macOS command line utility to configure multi-display resolutions and arrangements.  
-
+ 
 Install via Homebrew with:
 ```
 brew tap jakehilborn/jakehilborn && brew install displayplacer

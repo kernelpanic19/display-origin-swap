@@ -9,7 +9,7 @@ Runs 'displayplacer' with the correct arguments to swap the origin position of t
 git clone https://github.com/kernelpanic19/dos.git
 ```
 
-Edit the displays_to_swap tuple in dos.py if needed:
+Edit the displays_to_swap tuple in dos.py if needed.  This collection should contain the indexes of the two displays to swap. The indexes can be seen in the 'Detected screens' output of dos.py.
 ```
 def main():
     displays_to_swap = (1, 2)
